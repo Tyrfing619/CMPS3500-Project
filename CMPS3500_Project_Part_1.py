@@ -1,6 +1,4 @@
 import csv
-
-import csv
 data = []
 
 def printData(input):
