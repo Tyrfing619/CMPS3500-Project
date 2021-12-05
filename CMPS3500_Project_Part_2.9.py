@@ -46,6 +46,19 @@ def cleanFile(input):
     deleteEmpty = 0
     deleteDupe = 0
     for i in tempList:
+        for val in i:
+            if not bool(val):                                                                           # if an entry in a row is empty
+                #do the remove here
+                tempList.remove(i)
+                deleteEmpty+=1
+                break
+            elif val in uniqueNums:                                                                     # if an entry already exists within the sample set
+                tempList.remove(i)
+                deleteDupe+=1
+                break
+            else:
+                uniqueNums.append(val)
+    
         for val in i:   
             try:                                                                                        # Column Deletion
                 if val == 'NA':
@@ -65,19 +78,7 @@ def cleanFile(input):
                 print("{} from Row {} caused removal...".format(val, tempList.index(i) ) )
                 tempList = removeColumn(i.index(val), tempList) 
                 deleteCol+=1
-                
-        for val in i:
-            if not bool(val):                                                                           # if an entry in a row is empty
-                #do the remove here
-                tempList.remove(i)
-                deleteEmpty+=1
-                break
-            elif val in uniqueNums:                                                                     # if an entry already exists within the sample set
-                tempList.remove(i)
-                deleteDupe+=1
-                break
-            else:
-                uniqueNums.append(val)
+    
     print("Deletions: \nColumn Deletions: {} \nEmpty Row Deletions: {} \nDuplicate Number Deletions: {}\n".format(deleteCol, deleteEmpty, deleteDupe))
     sleep(8)
     return tempList
