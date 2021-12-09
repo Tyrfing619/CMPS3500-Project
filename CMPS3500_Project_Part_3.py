@@ -142,10 +142,12 @@ def countAndUnique(input):
             for val in input[i]:
                 if bool(val):
                     count[j] += 1
-                    if not (val in uniqueNums):
-                        uniqueNums.append(val)
-                        unique[j] += 1
-                    
+                    try:
+                        if (isinstance(float(val), float) or isinstance(int(val), int)) and not (val in uniqueNums):
+                            uniqueNums.append(val)
+                            unique[j] += 1
+                    except ValueError:
+                        pass
                 j+=1
     print("Count:", end="")
     for val in count:
