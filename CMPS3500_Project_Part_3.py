@@ -164,12 +164,21 @@ def mean(input):
     for i in range(len(data)):
         j = 0
         for val in data[i]:
-            mean[j] += val
+            if bool(val):
+                    try:
+                        if isinstance(float(val), float) or isinstance(int(val), int):
+                            mean[j] += float(val)
+                    except ValueError:
+                        pass
             j += 1
     for i in range(len(mean)):
         mean[i] = int(mean[i] / len(data))
-    
-    return mean
+        
+    print("Mean:", end="")
+    for val in mean:
+        print("\t\t" + str(val), end="\t")
+    print("")
+   
     
     
  #-----------------------------------------------------------------------------------------------------------------------------------   
@@ -241,6 +250,7 @@ def main():
                 print(cat, end="\t\t")
             print("")
             countAndUnique(data)
+            mean(data)
             sleep(6)
             #cleanData = cleanFile(data)
             #cleanData = sort(cleanData)
