@@ -4,6 +4,7 @@ from time import sleep
 
 data = []
 header = []
+countCol = []
 
 def clearConsole():
     command = 'clear'
@@ -41,45 +42,40 @@ def printData(input):
  #-----------------------------------------------------------------------------------------------------------------------------------       
 def cleanFile(input):
     tempList = input
-    uniqueNums = []
+    uniqueRows = []
     deleteCol = 0
     deleteEmpty = 0
     deleteDupe = 0
     for i in tempList:
-        for val in i:
-            if not bool(val):                                                                           # if an entry in a row is empty
-                #do the remove here
-                tempList.remove(i)
-                deleteEmpty+=1
-                break
-            elif val in uniqueNums:                                                                     # if an entry already exists within the sample set
-                tempList.remove(i)
-                deleteDupe+=1
-                break
-            else:
-                uniqueNums.append(val)
-    
-        for val in i:   
-            try:                                                                                        # Column Deletion
-                if val == 'NA':
-                    pass
-                elif isinstance(float(val), float):
-                    pass
-                elif isinstance(int(val), int):
-                    pass
-                else:
+        if i in uniqueRows:
+            tempList.pop(tempList.index(i))
+            deleteDupe+= 1
+        else:
+            uniqueRows.append(i)
+            for val in i:   
+                try:                                                                                        # Column Deletion
+                    if not bool(val):
+                        tempList.remove(i)
+                        deleteEmpty+=1
+                    if val == 'NA':
+                        pass
+                    elif isinstance(float(val), float):
+                        pass
+                    elif isinstance(int(val), int):
+                        pass
+                    else:
+                        print("{} removed...".format(header[i.index(val)]))
+                        print("{} from Row {} caused removal...".format(val, tempList.index(i) ) )
+                        tempList = removeColumn(i.index(val), tempList) 
+                        deleteCol+=1
+                    
+                except ValueError:
                     print("{} removed...".format(header[i.index(val)]))
                     print("{} from Row {} caused removal...".format(val, tempList.index(i) ) )
                     tempList = removeColumn(i.index(val), tempList) 
                     deleteCol+=1
-                    
-            except ValueError:
-                print("{} removed...".format(header[i.index(val)]))
-                print("{} from Row {} caused removal...".format(val, tempList.index(i) ) )
-                tempList = removeColumn(i.index(val), tempList) 
-                deleteCol+=1
     
-    print("Deletions: \nColumn Deletions: {} \nEmpty Row Deletions: {} \nDuplicate Number Deletions: {}\n".format(deleteCol, deleteEmpty, deleteDupe))
+    print("Deletions: \nColumn Deletions: {} \nEmpty Row Deletions: {} \nDuplicate Row Deletions: {}\n".format(deleteCol, deleteEmpty, deleteDupe))
     sleep(8)
     return tempList
     
@@ -131,17 +127,16 @@ def sort(input):                                                                
     return tempData
  
 def countAndUnique(input):
-    count = []
     unique = []
     for i in range(len(header)):
-        count.append(0)
+        countCol.append(0)
         unique.append(0)
     uniqueNums = []
     for i in range(len(input)):
             j = 0
             for val in input[i]:
                 if bool(val):
-                    count[j] += 1
+                    countCol[j] += 1
                     try:
                         if (isinstance(float(val), float) or isinstance(int(val), int)) and not (val in uniqueNums):
                             uniqueNums.append(val)
@@ -150,7 +145,7 @@ def countAndUnique(input):
                         pass
                 j+=1
     print("Count:", end="")
-    for val in count:
+    for val in countCol:
         print("\t\t" + str(val), end="\t")
     print("\nUnique:", end="")
     for val in unique:
