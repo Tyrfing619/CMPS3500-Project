@@ -4,7 +4,6 @@ from time import sleep
 
 data = []
 header = []
-countCol = []
 
 def clearConsole():
     command = 'clear'
@@ -40,7 +39,7 @@ def printData(input):
         print(cat, end="\t")
     print("")
  #-----------------------------------------------------------------------------------------------------------------------------------       
-def cleanFile(input):
+def cleanFile(input, prnt):
     tempList = input
     uniqueRows = []
     deleteCol = 0
@@ -74,9 +73,9 @@ def cleanFile(input):
                     print("{} from Row {} caused removal...".format(val, tempList.index(i) ) )
                     tempList = removeColumn(i.index(val), tempList) 
                     deleteCol+=1
-    
-    print("Deletions: \nColumn Deletions: {} \nEmpty Row Deletions: {} \nDuplicate Row Deletions: {}\n".format(deleteCol, deleteEmpty, deleteDupe))
-    sleep(8)
+    if prnt:
+        print("Deletions: \nColumn Deletions: {} \nEmpty Row Deletions: {} \nDuplicate Row Deletions: {}\n".format(deleteCol, deleteEmpty, deleteDupe))
+        sleep(8)
     return tempList
     
 def removeColumn(col, input):    
@@ -113,33 +112,52 @@ def searchData(column, value):
  #-----------------------------------------------------------------------------------------------------------------------------------    
 def sort(input):                                                                                    #needs to be a cleaned data set!
     tempData = input
-    changed = 1
-    while changed:
+    while 1:
         changed = 0
         for i in range(len(tempData)):
             for j in range(len(tempData[i])):
-                if (i+1) != len(tempData):
-                    if tempData[i][j] > tempData[i+1][j]:
+                if (i+4) < len(tempData):
+                    if float(tempData[i][j]) > float(tempData[i+1][j]):
                         temp = tempData[i+1][j]
                         tempData[i+1][j] = tempData[i][j]
                         tempData[i][j] = temp
                         changed = 1
+                    if float(tempData[i+1][j]) > float(tempData[i+2][j]):
+                        temp = tempData[i+2][j]
+                        tempData[i+2][j] = tempData[i+1][j]
+                        tempData[i+1][j] = temp
+                        changed = 1
+                    if float(tempData[i+2][j]) > float(tempData[i+3][j]):
+                        temp = tempData[i+3][j]
+                        tempData[i+3][j] = tempData[i+2][j]
+                        tempData[i+2][j] = temp
+                        changed = 1
+                    if float(tempData[i+3][j]) > float(tempData[i+4][j]):
+                        temp = tempData[i+4][j]
+                        tempData[i+4][j] = tempData[i+3][j]
+                        tempData[i+3][j] = temp
+                        changed = 1
+        if changed == 0:
+            break
     return tempData
  
 def countAndUnique(input):
+    countCol = []
     unique = []
     for i in range(len(header)):
         countCol.append(0)
         unique.append(0)
     uniqueNums = []
+    for i in range(len(header)):
+        uniqueNums.append([])
     for i in range(len(input)):
             j = 0
             for val in input[i]:
                 if bool(val):
                     countCol[j] += 1
                     try:
-                        if (isinstance(float(val), float) or isinstance(int(val), int)) and not (val in uniqueNums):
-                            uniqueNums.append(val)
+                        if (isinstance(float(val), float) or isinstance(int(val), int)) and not (val in uniqueNums[j]):
+                            uniqueNums[j].append(val)
                             unique[j] += 1
                     except ValueError:
                         pass
@@ -151,6 +169,7 @@ def countAndUnique(input):
     for val in unique:
         print("\t\t" + str(val), end="\t")
     print("")
+    
 
 def mean(input):
     mean = []
@@ -173,8 +192,23 @@ def mean(input):
     for val in mean:
         print("\t\t" + str(val), end="\t")
     print("")
-   
     
+   
+def median(input):
+    medianList = []
+    if ((len(input) % 2) == 1):
+        for i in range(len(header)):
+            medianList.append(input[    int(len(input)  /   2) ][i])
+    else:
+        for i in range(len(header)):
+            medianCalc = int(   input[int(len(input) / 2)][i]    )    +   int(    input[ int(len(input) / 2) - 1 ][i]   )
+            medianCalc = medianCalc / 2
+            medianList.append(medianCalc)
+    
+    print("Median:", end="")
+    for val in medianList:
+        print("\t\t" + str(float(val)), end="")
+    print("")
     
  #-----------------------------------------------------------------------------------------------------------------------------------   
     
@@ -188,7 +222,8 @@ def main():
         print("2        -       print the contents of a file\n")
         print("3        -       clean a file\n")
         print("4        -       search a value\n")
-        print("5        -       Statistics\n")      
+        print("5        -       Statistics\n")
+        print("6        -       Print a sorted data set\n")
         print("0        -       quit\n")
         while 1:
             try:
@@ -200,6 +235,8 @@ def main():
         if intInput == 1:
             # Open the file
             try:
+                data.clear()
+                header.clear()
                 fileInput = input("What is the name of the file?\t")
                 global FILENAME 
                 FILENAME = fileInput    #FILENAME = fileInput
@@ -220,7 +257,7 @@ def main():
                 
         elif intInput == 3:
             if len(data) > 0:
-                cleanList = cleanFile(data)
+                cleanList = cleanFile(data, 1)
                 printData(cleanList)
                 sleep(8)
             else:
@@ -239,6 +276,7 @@ def main():
                 sleep(6)
             else:
                 print("No file has been read...")
+                
         elif intInput == 5:
             print("\t\t", end="")
             for cat in header:
@@ -246,11 +284,16 @@ def main():
             print("")
             countAndUnique(data)
             mean(data)
-            sleep(6)
-            #cleanData = cleanFile(data)
-            #cleanData = sort(cleanData)
-                
-            
+
+            cleanData = cleanFile(data, 0)
+            cleanData = sort(cleanData)
+            median(cleanData)
+            sleep(8)
+        elif intInput == 6:
+            cleanData = cleanFile(data, 0)
+            cleanData = sort(cleanData)
+            printData(cleanData)
+            sleep(8)
         elif intInput == 0:
             break
         else:
