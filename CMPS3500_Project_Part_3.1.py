@@ -65,12 +65,6 @@ def cleanFile(input, prnt):
                     pass
                 elif isinstance(int(val), int):
                     pass
-                else:
-                    if prnt:
-                        print("{} removed...".format(header[i.index(val)]))
-                        print("{} from Row {} caused removal...".format(val, tempList.index(i) ) )
-                    tempList = removeColumn(i.index(val), tempList) 
-                    deleteCol+=1
                     
             except ValueError:
                 if prnt:
@@ -91,9 +85,11 @@ def removeColumn(col, input):
         try:
             tempInput[i].pop(col)
         except ValueError:
-            pass
+            print("Failure error occured, returning to main.  File must be read again.\n")
+            break
         except IndexError:
-            pass
+            print("Failure error occured, returning to main.  File must be read again.\n")
+            break
     return tempInput
  #-----------------------------------------------------------------------------------------------------------------------------------   
 def searchData(column, value):
@@ -124,7 +120,7 @@ def transpose(mat, row, col):                                                   
             
     return tr
  
-def RowWiseSort(B):
+def rowWiseSort(B):
     for i in range(len(B)):
         # Row - Wise Sorting
         B[i] = sorted(B[i])
