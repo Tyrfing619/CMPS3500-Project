@@ -86,10 +86,14 @@ def removeColumn(col, input):
             tempInput[i].pop(col)
         except ValueError:
             print("Failure error occured, returning to main.  File must be read again.\n")
-            break
+            data.clear()
+            header.clear()
+            main()
         except IndexError:
             print("Failure error occured, returning to main.  File must be read again.\n")
-            break
+            data.clear()
+            header.clear()
+            main()
     return tempInput
  #-----------------------------------------------------------------------------------------------------------------------------------   
 def searchData(column, value):
