@@ -133,6 +133,13 @@ def rowWiseSort(B):
     for i in range(len(B)):
         # Row - Wise Sorting
         B[i] = sorted(B[i])
+        #for j in range(0, len(B[i])):    
+        #    for k in range(j+1, len(B[i])):    
+        #        if float(B[i][j]) > float(B[i][k]):
+        #            temp = B[i][j]
+        #            B[i][j] = B[i][k]
+        #            B[i][k] = temp
+        #            
     return B
  
 def sortCol(inputArray, N, M):
