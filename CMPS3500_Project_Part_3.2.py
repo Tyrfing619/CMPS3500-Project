@@ -119,8 +119,39 @@ def searchData(column, value):
         data.clear()
         header.clear()
         main()
-#-----------------------------------------------------------------------------------------------------------------------------------    
-def transpose(inputArray, row, col):                                                         # Sorting Algorithm                      
+#-----------------------------------------------------------------------------------------------------------------------------------
+def mergeSort(inputList):                                                               # Sorting Algorithm
+    tempList = inputList
+    if len(tempList) > 1:
+        mid = len(tempList) // 2
+        leftList = tempList[:mid]
+        rightList = tempList[mid:]
+
+        mergeSort(leftList)
+        mergeSort(rightList)
+        i = 0
+        j = 0
+        k = 0
+        while i < len(leftList) and j < len(rightList):
+            if float(leftList[i]) <= float(rightList[j]):
+              tempList[k] = leftList[i]
+              i += 1
+            else:
+                tempList[k] = rightList[j]
+                j += 1
+            k += 1
+        while i < len(leftList):
+            tempList[k] = leftList[i]
+            i += 1
+            k += 1
+        while j < len(rightList):
+            tempList[k]=rightList[j]
+            j += 1
+            k += 1
+            
+    return tempList
+    
+def transpose(inputArray, row, col):                                                                               
     tr = [[0 for i in range(row)] for i in range(col)]
     for i in range(row):
         # Traverse each column 
@@ -132,17 +163,11 @@ def transpose(inputArray, row, col):                                            
 def rowWiseSort(B):
     for i in range(len(B)):
         # Row - Wise Sorting
-        B[i] = sorted(B[i])
-        #for j in range(0, len(B[i])):    
-        #    for k in range(j+1, len(B[i])):    
-        #        if float(B[i][j]) > float(B[i][k]):
-        #            temp = B[i][j]
-        #            B[i][j] = B[i][k]
-        #            B[i][k] = temp
-        #            
+        #B[i] = sorted(B[i])            # Cannot use due to no allowance of built-in mathematical/sorting functions
+        B[i] = mergeSort(B[i])           
     return B
  
-def sortCol(inputArray, N, M):
+def sortCol(inputArray, N, M):                                              # Main body of the sorting algorithm
     for i in range(len(inputArray)):
         for j in range(len(inputArray[i])):
             if '.' in str(inputArray[i][j]):
@@ -226,9 +251,9 @@ def median(input):
             medianCalc = medianCalc / 2
             medianList.append(medianCalc)
     
-    print("Median:", end="")
+    print("Median:", end="\t\t")
     for val in medianList:
-        print("\t\t" + str(float(val)), end="")
+        print(str(float(val)), end="\t\t")
     print("")
     medianList.clear()
 
@@ -244,9 +269,9 @@ def mode(input):
             
         mode[j] = max(set(tempList), key=tempList.count)
      
-    print("Mode:", end="")
+    print("Mode:", end="\t\t")
     for val in mode:
-        print("\t\t" + str(float(val)), end="")    
+        print(str(float(val)), end="\t\t")    
     print("")
     mode.clear()
     
