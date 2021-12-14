@@ -60,6 +60,7 @@ def cleanFile(input, prnt):
                     deleteEmpty+=1
                     
                 if val == 'NA':             # column deletion
+                    tempList[tempList.index(i)][i.index(val)] = 0
                     pass
                 elif isinstance(float(val), float):
                     pass
@@ -151,12 +152,12 @@ def mergeSort(inputList):                                                       
             
     return tempList
     
-def transpose(inputArray, row, col):                                                                               
+def transpose(inputList, row, col):                                                                               
     tr = [[0 for i in range(row)] for i in range(col)]
     for i in range(row):
         # Traverse each column 
         for j in range(col):
-            tr[j][i] = inputArray[i][j]
+            tr[j][i] = inputList[i][j]
             
     return tr
  
@@ -167,24 +168,24 @@ def rowWiseSort(B):
         B[i] = mergeSort(B[i])           
     return B
  
-def sortCol(inputArray, N, M):                                              # Main body of the sorting algorithm
-    for i in range(len(inputArray)):
-        for j in range(len(inputArray[i])):
-            if '.' in str(inputArray[i][j]):
-                inputArray[i][j] = float(inputArray[i][j])
+def sortCol(inputList, N, M):                                              # Main body of the sorting algorithm
+    for i in range(len(inputList)):
+        for j in range(len(inputList[i])):
+            if '.' in str(inputList[i][j]):
+                inputList[i][j] = float(inputList[i][j])
             else:
-                inputArray[i][j] = int(inputArray[i][j])
+                inputList[i][j] = int(inputList[i][j])
             
-    B = transpose(inputArray, N, M)
+    B = transpose(inputList, N, M)
     B = rowWiseSort(B)
-    inputArray = transpose(B, M, N)
+    inputList = transpose(B, M, N)
     
-    for i in range(len(inputArray)):
-        for j in range(len(inputArray[i])):
-            inputArray[i][j] = str(inputArray[i][j])
+    for i in range(len(inputList)):
+        for j in range(len(inputList[i])):
+            inputList[i][j] = str(inputList[i][j])
             
     
-    return inputArray
+    return inputList
  #-----------------------------------------------------------------------------------------------------------------------------------    
 def countAndUnique(input):
     countCol = []
@@ -247,13 +248,13 @@ def median(input):
             medianList.append(input[    int(len(input)  /   2) ][i])
     else:
         for i in range(len(header)):
-            medianCalc = int(   input[int(len(input) / 2)][i]    )    +   int(    input[ int(len(input) / 2) - 1 ][i]   )
+            medianCalc = float(   input[int(len(input) / 2)][i]    )    +   float(    input[ int(len(input) / 2) - 1 ][i]   )
             medianCalc = medianCalc / 2
             medianList.append(medianCalc)
     
     print("Median:", end="\t\t")
     for val in medianList:
-        print(str(float(val)), end="\t\t")
+        print("{:.2f}".format(float(val)), end="\t\t")   
     print("")
     medianList.clear()
 
@@ -285,9 +286,11 @@ def sdAndVariance(input, meanData):
     for j in range(len(header)):
         count = 0
         for i in range(len(input)):
-            variance[j] += (float(input[i][j]) - meanData[j]) ** 2
-            count+=1
-            
+            try:
+                variance[j] += (float(input[i][j]) - meanData[j]) ** 2
+                count+=1
+            except ValueError:
+                pass
         variance[j] = variance[j] / (count - 1)
     
     for j in range(len(header)):
@@ -310,12 +313,15 @@ def minMax(input):
     
     for j in range(len(header)):
         for i in range(len(input)):
-            if float(input[i][j]) > minMax[j][1]:
-                minMax[j][1] = float(input[i][j])
+            try:
+                if float(input[i][j]) > minMax[j][1]:
+                    minMax[j][1] = float(input[i][j])
             
-            if float(input[i][j]) < minMax[j][0]:
-                minMax[j][0] = float(input[i][j])
-    
+                if float(input[i][j]) < minMax[j][0]:
+                    minMax[j][0] = float(input[i][j])
+            except ValueError:
+                pass
+                
     return minMax
     
     
@@ -338,8 +344,7 @@ def percentile(input, percent):
 
 
 
- #-----------------------------------------------------------------------------------------------------------------------------------   
-  
+ #-----------------------------------------------------------------------------------------------------------------------------------    
 def main():
     cleanList = []
     while 1:
